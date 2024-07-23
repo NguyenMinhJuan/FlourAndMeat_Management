@@ -1,11 +1,10 @@
 package NguyenLieu;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
+
     public static void main(String[] args) {
         // tao cac doi tuong
         Material chicken = new Meat("Thit ga", 20000, LocalDate.parse("2002-12-12"), "thit01", 5);
@@ -40,7 +39,6 @@ public class Main {
             System.out.println("---------------------------------");
             System.out.println("-1/Tong tien 10 vat lieu\t\t" + "-");
             System.out.println("-2/Sap xep theo gia tang dan\t" + "-");
-            System.out.println("-3/Sap xep theo gia giam dan\t" + "-");
             System.out.println("-4/Them san pham\t\t\t\t-");
             System.out.println("-5/Xoa san pham \t\t\t\t-");
             System.out.println("-6/Sua san pham \t\t\t\t-");
@@ -53,18 +51,21 @@ public class Main {
                 case 1:
                     break;
                 case 2:
-                    break;
-                case 3:
+                    sortMaterial(materials);
                     break;
                 case 4:
-                    addMaterial();
+                    addMaterial(materials);
                     break;
                 case 5:
-                    for (Material m : materials) {
-                        System.out.println(m.toString());
-                    }
+                    removeMaterial(materials);
                     break;
                 case 6:
+
+                    break;
+                case 7:
+                    displayMaterial(materials);
+                    break;
+                case 8:
                     System.exit(0);
                     break;
                 default:
@@ -75,32 +76,80 @@ public class Main {
 
     }
 
-    public static void addMaterial() {
-        System.out.println("Menu them san pham ");
-        System.out.println("1/Them thit ");
-        System.out.println("2/Them bot");
-        System.out.println("3/Tro ve menu chinh");
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Moi ban nhap lua chon");
-        int choice = Integer.parseInt(sc.nextLine());
-        switch (choice) {
-            case 1:
-                addMeat();
-                break;
-            case 2:
-                addFlour();
-                break;
-            case 3:
-                return;
+    private static void sortMaterial(ArrayList<Material> materials) {
+        Collections.sort(materials, new Comparator<Material>() {
+            @Override
+            public int compare(Material o1, Material o2) {
+                if(o1.getCost()>o2.getCost()) {
+                    return 1;
+                }
+                else if(o1.getCost()<o2.getCost()) {
+                    return -1;
+                }
+                return 0;
+            }
+
+        });
+        int index=0;
+        for (Material m : materials) {
+            System.out.println("Index:"+index+" "+m.toString());
+            index ++;
         }
     }
 
-    private static void addFlour() {
-        System.out.println("Menu them bot ");
-        System.out.println("Moi ban nhap ");
+    public static void displayMaterial(ArrayList<Material> materials)
+    {
+        int index=0;
+        for (Material m : materials) {
+            System.out.println("Index:"+index+" "+m.toString());
+            index ++;
+        }
     }
 
-    private static void addMeat() {
-        System.out.println("Menu them thit");
+
+    public static void removeMaterial(ArrayList<Material> materials) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Moi ban nhap index can xoa");
+        int id = Integer.parseInt(sc.nextLine());
+        materials.remove(id);
+        System.out.println("Da xoa thanh cong!");
+
+
     }
+
+    public static void addMaterial(ArrayList<Material> materials) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Menu them san pham ");
+        System.out.println("-------------------");
+        System.out.println("Moi nhap ten san pham");
+        String name=sc.nextLine();
+        System.out.println("Moi nhap gia san pham");
+        int cost=Integer.parseInt(sc.nextLine());
+        System.out.println("Moi nhap ngay san xuat");
+        LocalDate date=LocalDate.parse(sc.nextLine());
+        System.out.println("Moi nhap id");
+        String id=sc.nextLine();
+        System.out.println("Moi nhap loai san pham(flour/meat");
+        String type = sc.nextLine();
+        if(type.equals("flour")) {
+            System.out.println("Moi ban nhap so luong");
+            int quantity=Integer.parseInt(sc.nextLine());
+            Material newFlour=new CrispyFlour(name,cost,date,id,quantity);
+            materials.add(newFlour);
+
+
+        }
+        else if (type.equals("meat")){
+            System.out.println("Moi ban nhap khoi luong");
+            int weight=Integer.parseInt(sc.nextLine());
+            Material newMeat=new Meat(name,cost,date,id,weight);
+            materials.add(newMeat);
+
+        }
+
+
+    }
+
+
+
 }
